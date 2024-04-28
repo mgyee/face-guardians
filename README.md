@@ -4,9 +4,9 @@
 
 ## References
 
-Articles Referenced: https://arxiv.org/pdf/1704.06756 (Convolutional Neural Networks for Facial Expression Recognition)
+**Articles Referenced**: https://arxiv.org/pdf/1704.06756 (Convolutional Neural Networks for Facial Expression Recognition)
 
-GitHub Repos Referenced: https://github.com/jaydeepthik/kaggle-facial-expression-recognition?tab=readme-ov-file (DCNN Based on Article Above)
+**GitHub Repos Referenced**: https://github.com/jaydeepthik/kaggle-facial-expression-recognition?tab=readme-ov-file (DCNN Based on Article Above)
 
 https://github.com/piyush2896/Facial-Expression-Recognition-Challenge (camera architecture)
 
