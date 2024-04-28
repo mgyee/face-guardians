@@ -17,7 +17,7 @@ def preprocess_fer() :
     # keras.backend.set_session(sess)
     #------------------------------
 
-    with open("/Users/alexandercueva/Desktop/Temp/Facial-Expression-Recognition-Challenge/data/fer2013.csv") as f:
+    with open("/home/mgyee/Downloads/fer2013.csv") as f:
         content = f.readlines()
 
     lines = np.array(content)

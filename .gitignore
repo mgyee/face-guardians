@@ -162,3 +162,8 @@ cython_debug/
 .DS_Store
 
 data/fer2013.csv
+
+
+__pycache__
+.ipynb_checkpoints
+fer2013.tar
