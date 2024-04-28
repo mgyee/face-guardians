@@ -1,8 +1,12 @@
 import tensorflow as tf
-from tensorflow import keras
-#from tensorflow.keras.models import Sequential
-#from tensorflow.keras.layers import Dense, Conv2D, MaxPooling2D, Dropout, Flatten
 import matplotlib.pyplot as plt
+import keras
+# from keras.layers import Conv2D, Dropout, Flatten, Dense, LeakyReLU, MaxPool2D
+# from keras.models import Sequential
+# from keras.preprocessing import image
+from keras.preprocessing.image import ImageDataGenerator
+from keras.callbacks import ModelCheckpoint
+from preprocessing import preprocess_fer
 import numpy as np
 
 num_classes = 7 # angry, disgust, fear, happy, sad, surprise, neutral
@@ -16,42 +20,52 @@ checkpoint_callback = ModelCheckpoint(
     verbose=1)               # Show progress
 
 def create_model() :
-    model = Sequential([
-        Conv2D(64, 3, 1, padding="same", activation="relu", name="block1_conv1"),
-        Conv2D(64, 3, 1, padding="same",activation="relu", name="block1_conv2"),
-        MaxPool2D(2, name="block1_pool"),
+    model = keras.models.Sequential()
+        
+    model.add(keras.layers.Conv2D(64,(3,3), input_shape=(48,48, 1), padding="same"))
+    model.add(keras.layers.BatchNormalization())
+    model.add(keras.layers.Activation('relu'))
+    model.add(keras.layers.MaxPooling2D())
+    model.add(keras.layers.Dropout(0.20))
+    
+    model.add(keras.layers.Conv2D(128,(5,5), padding='same'))
+    model.add(keras.layers.BatchNormalization())
+    model.add(keras.layers.Activation('relu'))
+    model.add(keras.layers.MaxPooling2D())
+    model.add(keras.layers.Dropout(0.20))
 
-        # Block 2
-        Conv2D(128, 3, 1, padding="same", activation="relu", name="block2_conv1"),
-        Conv2D(128, 3, 1, padding="same", activation="relu", name="block2_conv2"),
-        MaxPool2D(2, name="block2_pool"),
-
-        # Block 3
-        Conv2D(256, 3, 1, padding="same", activation="relu", name="block3_conv1"),
-        Conv2D(256, 3, 1, padding="same", activation="relu", name="block3_conv2"),
-        Conv2D(256, 3, 1, padding="same", activation="relu", name="block3_conv3"),
-        MaxPool2D(2, name="block3_pool"),
-
-        # Block 4
-        Conv2D(512, 3, 1, padding="same", activation="relu", name="block4_conv1"),
-        Conv2D(512, 3, 1, padding="same", activation="relu", name="block4_conv2"),
-        Conv2D(512, 3, 1, padding="same", activation="relu", name="block4_conv3"),
-        MaxPool2D(2, name="block4_pool"),
-
-        # Block 5
-        Conv2D(512, 3, 1, padding="same", activation="relu", name="block5_conv1"),
-        Conv2D(512, 3, 1, padding="same", activation="relu", name="block5_conv2"),
-        Conv2D(512, 3, 1, padding="same", activation="relu", name="block5_conv3"),
-        MaxPool2D(2, name="block5_pool"),
-
-        Flatten(),
-        Dense(512, activation="relu"),
-        Dropout(0.4),
-        Dense(512, activation="relu"),
-        Dropout(0.4),
-        Dense(7, activation="softmax")
-    ])
-
+    model.add(keras.layers.Conv2D(512,(3,3), padding="same"))
+    model.add(keras.layers.BatchNormalization())
+    model.add(keras.layers.Activation('relu'))
+    model.add(keras.layers.MaxPooling2D())
+    model.add(keras.layers.Dropout(0.20))
+    
+    model.add(keras.layers.Conv2D(512,(3,3)))
+    model.add(keras.layers.BatchNormalization())
+    model.add(keras.layers.Activation('relu'))
+    model.add(keras.layers.MaxPooling2D())
+    model.add(keras.layers.Dropout(0.25))
+    
+    model.add(keras.layers.Conv2D(256,(3,3), padding='same', activation='relu'))
+    model.add(keras.layers.Conv2D(128,(3,3), padding='same', activation='relu'))
+    model.add(keras.layers.MaxPooling2D())
+    model.add(keras.layers.Dropout(0.25))
+    
+    #model.add(keras.layers.GlobalAveragePooling2D())
+    model.add(keras.layers.Flatten())
+    model.add(keras.layers.Dense(256))
+    model.add(keras.layers.BatchNormalization())
+    model.add(keras.layers.Activation('relu'))
+    model.add(keras.layers.Dropout(0.5))
+    
+    model.add(keras.layers.Dense(512, activation='relu'))
+    model.add(keras.layers.BatchNormalization())
+    model.add(keras.layers.Activation('relu'))
+    model.add(keras.layers.Dropout(0.5))
+    
+    model.add(keras.layers.Dense(7,activation='softmax'))
+    
+    # model.compile(loss="sparse_categorical_crossentropy", optimizer=keras.optimizers.Adam(lr=lr) , metrics=['accuracy'])
     return model
 
 #function for drawing bar chart for emotion preditions
