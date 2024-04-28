@@ -3,7 +3,7 @@ from misc.original_model import FacialExpressionModel
 import numpy as np
 
 rgb = cv2.VideoCapture(0)
-facec = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+facec = cv2.CascadeClassifier('misc/haarcascade_frontalface_default.xml')
 font = cv2.FONT_HERSHEY_SIMPLEX
 
 def __get_data__():
@@ -44,5 +44,5 @@ def start_app(cnn):
 
 
 if __name__ == '__main__':
-    model = FacialExpressionModel("face_model.json", "face_model.h5")
+    model = FacialExpressionModel("face_model.json", "weights.h5")
     start_app(model)

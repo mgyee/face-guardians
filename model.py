@@ -5,6 +5,7 @@ import keras
 # from keras.models import Sequential
 # from keras.preprocessing import image
 from keras.preprocessing.image import ImageDataGenerator
+from sklearn.model_selection import train_test_split
 from keras.callbacks import ModelCheckpoint
 from preprocessing import preprocess_fer
 import numpy as np
@@ -82,9 +83,10 @@ def emotion_analysis(emotions):
 
 def main():
     x_train, y_train, x_test, y_test = preprocess_fer()
+    train_images, val_images, train_labels, val_labels = train_test_split(x_train, y_train, test_size=0.2)
     # gen = ImageDataGenerator()
     # train_generator = gen.flow(x_train, y_train, batch_size=batch_size)
-    train_loader = tf.data.Dataset.from_tensor_slices((x_train, y_train))
+    train_loader = tf.data.Dataset.from_tensor_slices((train_images, train_labels))
     train_loader = train_loader.batch(batch_size)
 
     model = create_model()
@@ -99,7 +101,8 @@ def main():
 
     #------------------------------
 
-    model.fit(train_loader.repeat(), steps_per_epoch=batch_size, epochs=epochs, callbacks=[checkpoint_callback])
+    model.fit(train_loader.repeat(), steps_per_epoch=batch_size, epochs=epochs, 
+              callbacks=[checkpoint_callback], validation_data=(val_images, val_labels))
     #overall evaluation
     score = model.evaluate(x_test, y_test)
     print('Test loss:', score[0])

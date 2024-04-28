@@ -1,5 +1,6 @@
 from keras.models import model_from_json
 import numpy as np
+from model import create_model
 
 class FacialExpressionModel(object):
 
@@ -10,9 +11,10 @@ class FacialExpressionModel(object):
 
     def __init__(self, model_json_file, model_weights_file):
         # load model from JSON file
-        with open(model_json_file, "r") as json_file:
-            loaded_model_json = json_file.read()
-            self.loaded_model = model_from_json(loaded_model_json)
+        # with open(model_json_file, "r") as json_file:
+            # loaded_model_json = json_file.read()
+            # self.loaded_model = model_from_json(loaded_model_json)
+        self.loaded_model = create_model()
 
         # load weights into the new model
         self.loaded_model.load_weights(model_weights_file)
