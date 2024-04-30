@@ -1,5 +1,7 @@
 import cv2
 
+resize_shape = (128, 128)
+
 def overlay_image(frame, image, position=(0, 0)):
     """
     Overlay an image onto a frame.
@@ -16,7 +18,7 @@ def overlay_image(frame, image, position=(0, 0)):
     x, y = position
 
     # resize the image to 64x64
-    image_resized = cv2.resize(image, (64, 64))
+    image_resized = cv2.resize(image, resize_shape)
 
     # image contains an extra alpha channel, reconstruct the image without an 
     # alpha channel
@@ -24,6 +26,6 @@ def overlay_image(frame, image, position=(0, 0)):
         b, g, r, _ = cv2.split(image_resized)
         image_resized = cv2.merge((b, g, r))
 
-    frame[y:y+64, x:x+64] = image_resized
+    frame[y:y+resize_shape[0], x:x+resize_shape[1]] = image_resized
 
     return frame

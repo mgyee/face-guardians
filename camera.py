@@ -13,6 +13,8 @@ emotion_pairs = [("Angry", "data/images/angry.png"), ("Disgust", "data/images/di
                  ("Sad", "data/images/sad.png"), ("Surprise", "data/images/surprise.png"),
                  ("Neutral", "data/images/neutral.png")]
 
+checkmark_file = "data/images/checkmark.png"
+
 rect_width = 200
 rect_height = 50
 rect_position = (0, 0, rect_width, rect_height)
@@ -40,6 +42,7 @@ def get_next_emotion():
     return (emotion, emoji)
 
 def start_app(cnn):
+    checkmark = cv2.imread(checkmark_file, -1)
     next_emotion, emoji_file = random.choice(emotion_pairs)
     detected_emotion = None
     skip_frame = 10
@@ -74,10 +77,12 @@ def start_app(cnn):
         if cv2.waitKey(1) == 27:
             break
 
-        fr = overlay_image(fr, emoji, position=(100, 100))
+        fr = overlay_image(fr, emoji, position=(0, 0))
         cv2.imshow('Filter', fr)
 
         if (detected_emotion == next_emotion):
+            fr = overlay_image(fr, checkmark, position=(0, 128))
+            cv2.imshow('Filter', fr)
             next_emotion, emoji_file = random.choice(emotion_pairs)
     cv2.destroyAllWindows()
 
