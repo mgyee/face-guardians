@@ -16,8 +16,8 @@ def preprocess_fer() :
     # sess = tf.Session(config=config) 
     # keras.backend.set_session(sess)
     #------------------------------
-
-    with open("/home/mgyee/Downloads/fer2013.csv") as f:
+    with open("data/fer2013.csv") as f:
+    # with open("/home/mgyee/Downloads/fer2013.csv") as f:
         content = f.readlines()
 
     lines = np.array(content)

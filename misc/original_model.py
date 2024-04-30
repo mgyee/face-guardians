@@ -2,6 +2,8 @@ from keras.models import model_from_json
 import numpy as np
 from model import create_model
 
+# TODO: Rename this to model and rename current model.py into something else
+# Probably something about creating and traing the model util/train?
 class FacialExpressionModel(object):
 
     EMOTIONS_LIST = ["Angry", "Disgust",
