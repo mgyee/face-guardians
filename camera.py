@@ -1,3 +1,4 @@
+import time
 from misc.original_model import FacialExpressionModel
 from utils import overlay_image
 import numpy as np
@@ -18,6 +19,7 @@ checkmark_file = "data/images/checkmark.png"
 rect_width = 200
 rect_height = 50
 rect_position = (0, 0, rect_width, rect_height)
+sleep_secs = 2
 
 def __get_data__():
     """
@@ -41,10 +43,30 @@ def get_next_emotion():
     emotion, emoji = random.choice(emotion_pairs)
     return (emotion, emoji)
 
+def time_stall(emotion, emoji, checkmark, start_time, seconds):
+    """
+    Stall for a certain number of seconds.
+
+    Args:
+        start_time: The time at which the stall started.
+        seconds: The number of seconds to stall for.
+    """
+
+    while (time.time() < start_time + seconds):
+        _, fr = rgb.read()
+        fr_width = fr.shape[1]
+        cv2.rectangle(fr, (fr_width - rect_width, 0), (fr_width, rect_height), (255, 255, 255), -1)
+        cv2.putText(fr, emotion, (fr_width - rect_width + 30, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 0), 3)
+        fr = overlay_image(fr, emoji, position=(0, 0))
+        fr = overlay_image(fr, checkmark, position=(0, 128))
+        cv2.imshow('Filter', fr)
+        cv2.waitKey(2)
+
 def start_app(cnn):
     checkmark = cv2.imread(checkmark_file, -1)
     next_emotion, emoji_file = random.choice(emotion_pairs)
     detected_emotion = None
+    start_time = None
     skip_frame = 10
     data = []
     flag = False
@@ -81,9 +103,14 @@ def start_app(cnn):
         cv2.imshow('Filter', fr)
 
         if (detected_emotion == next_emotion):
+            start_time = time.time()
             fr = overlay_image(fr, checkmark, position=(0, 128))
             cv2.imshow('Filter', fr)
+
+            time_stall(next_emotion, emoji, checkmark, start_time, sleep_secs)
             next_emotion, emoji_file = random.choice(emotion_pairs)
+
+
     cv2.destroyAllWindows()
 
 
