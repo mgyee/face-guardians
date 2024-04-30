@@ -35,8 +35,12 @@ def __get_data__():
     
     return faces, fr, gray
 
+def get_next_emotion():
+    emotion, emoji = random.choice(emotion_pairs)
+    return (emotion, emoji)
+
 def start_app(cnn):
-    next_emotion = random.choice(emotion_pairs)
+    next_emotion, emoji_file = random.choice(emotion_pairs)
     detected_emotion = None
     skip_frame = 10
     data = []
@@ -54,8 +58,8 @@ def start_app(cnn):
         cv2.rectangle(fr, (fr_width - rect_width, 0), (fr_width, rect_height), (255, 255, 255), -1)
 
         # cv2.FONT_HERSHEY_SIMPLEX seems best, others look too pixelated
-        cv2.putText(fr, next_emotion[0], (fr_width - rect_width + 30, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 0), 3)
-        emoji = cv2.imread(next_emotion[1], -1)
+        cv2.putText(fr, next_emotion, (fr_width - rect_width + 30, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 0), 3)
+        emoji = cv2.imread(emoji_file, -1)
 
         for (x, y, w, h) in faces:
             fc = gray_fr[y:y+h, x:x+w]
@@ -73,8 +77,8 @@ def start_app(cnn):
         fr = overlay_image(fr, emoji, position=(100, 100))
         cv2.imshow('Filter', fr)
 
-        if (detected_emotion == next_emotion[0]):
-            next_emotion = random.choice(emotion_pairs)
+        if (detected_emotion == next_emotion):
+            next_emotion, emoji_file = random.choice(emotion_pairs)
     cv2.destroyAllWindows()
 
 
