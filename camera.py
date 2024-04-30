@@ -71,6 +71,10 @@ def time_stall_end(end_screen, start_time, seconds, position=(0, 128)):
         cv2.imshow('Filter', fr)
         cv2.waitKey(2)
 
+def time_stall_empty(start_time, seconds):
+    while (time.time() < start_time + seconds):
+        cv2.waitKey(2)
+
 def start_app(cnn):
     checkmark = cv2.imread(checkmark_file, -1)
     end_screen = cv2.imread(end_screen_file, 1)
@@ -102,6 +106,7 @@ def start_app(cnn):
     
     next_emotion, emoji_file = get_next_emotion(password)
 
+    tracker = 0
     while True:
         ix += 1
         faces, fr, gray_fr = __get_data__()
@@ -115,7 +120,7 @@ def start_app(cnn):
         # cv2.FONT_HERSHEY_SIMPLEX seems best, others look too pixelated
         cv2.putText(fr, next_emotion, (fr_width - rect_width + 30, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 0), 3)
         emoji = cv2.imread(emoji_file, -1)
-
+        
         for (x, y, w, h) in faces:
             fc = gray_fr[y:y+h, x:x+w]
             
@@ -133,12 +138,17 @@ def start_app(cnn):
         cv2.imshow('Filter', fr)
 
         if (detected_emotion == next_emotion):
-            start_time = time.time()
-            fr = overlay_image(fr, checkmark, position=(0, 128))
-            cv2.imshow('Filter', fr)
+            tracker += 1
+            if tracker == 10:
+                tracker = 0
+                start_time = time.time()
+                fr = overlay_image(fr, checkmark, position=(0, 128))
+                cv2.imshow('Filter', fr)
 
-            time_stall(next_emotion, emoji, checkmark, start_time, sleep_secs)
-            
+                time_stall(next_emotion, emoji, checkmark, start_time, 4)
+            else:
+                continue
+
             if password:
                 next_emotion, emoji_file = get_next_emotion(password)
             else:
