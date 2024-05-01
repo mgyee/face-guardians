@@ -71,10 +71,6 @@ def time_stall_end(end_screen, start_time, seconds, position=(0, 128)):
         cv2.imshow('Filter', fr)
         cv2.waitKey(2)
 
-def time_stall_empty(start_time, seconds):
-    while (time.time() < start_time + seconds):
-        cv2.waitKey(2)
-
 def start_app(cnn):
     checkmark = cv2.imread(checkmark_file, -1)
     end_screen = cv2.imread(end_screen_file, 1)
@@ -145,7 +141,7 @@ def start_app(cnn):
                 fr = overlay_image(fr, checkmark, position=(0, 128))
                 cv2.imshow('Filter', fr)
 
-                time_stall(next_emotion, emoji, checkmark, start_time, 4)
+                time_stall(next_emotion, emoji, checkmark, start_time, 3)
             else:
                 continue
 
